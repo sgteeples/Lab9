@@ -14,7 +14,7 @@ typedef enum {
 /* This struct contains all information about a projectile */
 typedef struct {
 
-  // Missle type (player, enemy, enemy plane)
+  // Missle type (player, egg)
   projectile_type_t type;
 
   // Current state (the 'enum' will be defined in your projectile.c file, so it's
@@ -28,7 +28,7 @@ typedef struct {
   // Ending x,y of projectile, and the total length from origin to destination.
   uint16_t x_dest;
   uint16_t y_dest;
-  uint16_t total_length;
+  double total_length;
 
   // Used to track the current x,y of projectile
   int16_t x_current;
@@ -55,13 +55,11 @@ void projectile_init_dead(projectile_t *projectile);
 
 // Initialize the projectile as a player projectile.  This function takes an (x, y)
 // destination of the projectile (where the user touched on the touchscreen).  The
-// origin should be the closest "firing location" to the destination (there are
-// three firing locations evenly spaced along the bottom of the screen).
+// Firing location from middle center of the screen
 void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_dest);
 
-// Initialize the projectile as a plane projectile.  This function takes an (x, y)
-// location of the plane which will be used as the origin.  The destination can
-// be randomly chosed along the bottom of the screen.
+// Initialize the projectile as a egg projectile.  This function takes an (x, y)
+// location of the plane which will be used as the origin.  The destination will be the gun
 void projectile_init_egg(projectile_t *projectile, int16_t plane_x, int16_t plane_y);
 
 ////////// State Machine TICK Function //////////

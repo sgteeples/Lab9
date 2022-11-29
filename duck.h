@@ -2,7 +2,7 @@
 #define DUCK
 
 #include "display.h"
-#include "missile.h"
+
 
 /* This struct contains all information about a duck */
 typedef struct {
@@ -14,23 +14,23 @@ typedef struct {
   uint16_t x_origin;
   uint16_t y_origin;
 
-  // Ending x,y of missile, and the total length from origin to destination.
+  // Ending x,y of duck, and the total length from origin to destination.
   uint16_t x_dest;
   uint16_t y_dest;
 
-  // Used to track the current x,y of missile
+  // Used to track the current x,y of a duck
   int16_t x_current;
   int16_t y_current;
 
-  // plane explode
+  // duck die
   bool duck_die;
 
-  // plane missile
-  missile_t egg;
+  // duck egg
+  projectile_t egg;
 
 } duck_t;
 
-void duck_init(projectile_t *);
+void duck_init(projectile_t *egg);
 
 // State machine tick function
 void duck_tick();
