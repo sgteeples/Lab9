@@ -2,6 +2,7 @@
 #define DUCK
 
 #include "display.h"
+#include "projectiles.h"
 
 
 /* This struct contains all information about a duck */

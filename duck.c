@@ -4,7 +4,7 @@
 static enum duck_st_t { MOVING_ST, DEAD_ST } DUMMY;
 
 //init ducks
-void duck_init(projectile_t *){
+void duck_init(projectile_t *egg){
 
 }
 

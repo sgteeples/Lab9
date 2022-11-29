@@ -1,12 +1,13 @@
 #include <stdio.h>
+#include "settings.h"
 #include "gameControl.h"
-#include "duck.h"
-#include "projectiles.h"
 #include "touchscreen.h"
+#include "interrupts.h"
+#include "intervalTimer.h"
 
 //declarations
 #define RUNTIME_S 60
-#define RUNTIME_TICKS ((int)(RUNTIME_S / CONFIG_GAME_TIMER_PERIOD))
+#define RUNTIME_TICKS ((int)(RUNTIME_S / SETTING_GAME_TIMER_PERIOD))
 volatile bool interrupt_flag;
 uint32_t isr_triggered_count;
 uint32_t isr_handled_count;
@@ -31,7 +32,7 @@ int main() {
   isr_handled_count = 0;
 
   display_init();
-  touchscreen_init(CONFIG_TOUCHSCREEN_TIMER_PERIOD);
+  touchscreen_init(SETTING_TOUCHSCREEN_TIMER_PERIOD);
   gameControl_init();
 
   // Initialize timer interrupts
@@ -41,9 +42,9 @@ int main() {
   interrupts_irq_enable(INTERVAL_TIMER_0_INTERRUPT_IRQ);
   interrupts_irq_enable(INTERVAL_TIMER_1_INTERRUPT_IRQ);
 
-  intervalTimer_initCountDown(INTERVAL_TIMER_0, CONFIG_GAME_TIMER_PERIOD);
+  intervalTimer_initCountDown(INTERVAL_TIMER_0, SETTING_GAME_TIMER_PERIOD);
   intervalTimer_initCountDown(INTERVAL_TIMER_1,
-                              CONFIG_TOUCHSCREEN_TIMER_PERIOD);
+                              SETTING_TOUCHSCREEN_TIMER_PERIOD);
   intervalTimer_enableInterrupt(INTERVAL_TIMER_0);
   intervalTimer_enableInterrupt(INTERVAL_TIMER_1);
   intervalTimer_start(INTERVAL_TIMER_0);
