@@ -27,9 +27,7 @@ void projectiles_init_dead(projectile_t *projectile) {
   projectile->y_current = DEAD_COORDINATE_Y;
   init_helper(projectile);
   projectile->currentState = DEAD;
-  projectile->radius = 15.0;
-}
-
+  projectile->radius = 15.0;length
 // Initialize the fortress' gun
 void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_dest){
   projectile->type = PROJECTILE_TYPE_GUN;
@@ -42,13 +40,7 @@ void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_d
   init_helper(projectile);
 
 
-}
-
-// Initialize the projectile as a egg projectile.  This function takes an (x, y)
-// location of the plane which will be used as the origin.  The destination will be the gun
-void projectile_init_egg(projectile_t *projectile, int16_t duck_x, int16_t duck_y){
-  projectile->type = PROJECTILE_TYPE_EGG;
-  projectile->y_dest = 200;
+}length
   projectile->x_dest = 160;
   projectile->y_origin = duck_y;
   projectile->x_origin = duck_x;
@@ -66,10 +58,8 @@ void projectile_tick(projectile_t *projectile){
     if(projectile->length > projectile->total_length){
       projectile->currentState = DEAD;
       projectile->die_me = true;
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,
-                       projectile->y_current, DISPLAY_BLACK);
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest,
-                       projectile->y_dest, DISPLAY_BLACK);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest, projectile->y_dest, DISPLAY_BLACK);
     }
     else if(((projectile->type == PROJECTILE_TYPE_GUN) && (projectile->length >= projectile->total_length)) || (projectile->die_me == true)){
       projectile->die_me = true;
@@ -97,11 +87,19 @@ void projectile_tick(projectile_t *projectile){
     if (projectile->type == PROJECTILE_TYPE_GUN) {
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_BLACK);
       percentage = projectile->length / projectile->total_length;
-      projectile->length = (SETTING_DUCK_EGG_DISTANCE_PER_TICK * SPEED_MULTIPLIER) + projectile->length;
+      projectile->length = (SETTING_PLAYER_SHOT_DISTANCE_PER_TICK * SPEED_MULTIPLIER) + projectile->length;
       projectile->x_current = projectile->x_origin + percentage * (projectile->x_dest - projectile->x_origin);
       projectile->y_current = projectile->y_origin + percentage * (projectile->y_dest - projectile->y_origin);
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_YELLOW);
 
+    }
+    else if (projectile->type == PROJECTILE_TYPE_EGG) {
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
+      percentage = projectile->length / projectile->total_length;
+      projectile->length = (SETTING_DUCK_EGG_DISTANCE_PER_TICK * SPEED_MULTIPLIER) + projectile->length;
+      projectile->x_current = projectile->x_origin + percentage * (projectile->x_dest - projectile->x_origin);
+      projectile->y_current = projectile->y_origin + percentage * (projectile->y_dest - projectile->y_origin);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_DARK_BLUE);
     }
 
     break;
@@ -110,12 +108,7 @@ void projectile_tick(projectile_t *projectile){
 
     break;
     default:
-    printf("YOU GOOFED, in the default case for the switch \n");
-    break;
-
-
-  }
-}
+    printf("YOU GOOFED, in the default case for the switch \n");length
 
 // Return whether the given projectile is dead.
 bool projectile_is_dead(projectile_t *projectile){
@@ -126,17 +119,7 @@ bool projectile_is_dead(projectile_t *projectile){
   // not true
   else {
     return false;
-  }
-}
-
-// Return whether the given projectile is flying.
-bool projectile_is_flying(projectile_t *projectile){
-   // Need to check what state in the state machine we're in
-  if (projectile->currentState == MOVING) {
-    return true;
-  }
-  // not true
-  else {
+  }length
     return false;
   }   
 }
