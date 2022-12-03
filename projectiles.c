@@ -9,8 +9,8 @@
 #define DEAD_COORDINATE_X 0
 #define DEAD_COORDINATE_Y 0
 #define SQUARED 2
-
-
+#define SPEED_MULTIPLIER 2
+double percentage = 0;
 // Helper function
 void init_helper(projectile_t *projectile);
 
@@ -71,7 +71,7 @@ void projectile_tick(projectile_t *projectile){
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest,
                        projectile->y_dest, DISPLAY_BLACK);
     }
-    else if(((projectile->type == PROJECTILE_TYPE_GUN) && (projectile->length >= projectile->total_length)) || (projectile->explode_me == true)){
+    else if(((projectile->type == PROJECTILE_TYPE_GUN) && (projectile->length >= projectile->total_length)) || (projectile->die_me == true)){
       projectile->die_me = true;
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
       projectile->x_current = projectile->x_dest;
@@ -97,7 +97,7 @@ void projectile_tick(projectile_t *projectile){
     if (projectile->type == PROJECTILE_TYPE_GUN) {
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_BLACK);
       percentage = projectile->length / projectile->total_length;
-      projectile->length = (CONFIG_PLAYER_projectile_DISTANCE_PER_TICK * SPEED_MULTIPLIER) + projectile->length;
+      projectile->length = (SETTING_DUCK_EGG_DISTANCE_PER_TICK * SPEED_MULTIPLIER) + projectile->length;
       projectile->x_current = projectile->x_origin + percentage * (projectile->x_dest - projectile->x_origin);
       projectile->y_current = projectile->y_origin + percentage * (projectile->y_dest - projectile->y_origin);
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_YELLOW);
