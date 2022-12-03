@@ -42,4 +42,7 @@ void duck_die();
 // Get the XY location of the duck
 display_point_t duck_getXY();
 
+//draw the duck
+void draw_duck();
+
 #endif /* DUCK */
