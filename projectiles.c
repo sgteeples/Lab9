@@ -9,26 +9,112 @@
 #define DEAD_COORDINATE_X 0
 #define DEAD_COORDINATE_Y 0
 #define SQUARED 2
+
+
+// Helper function
 void init_helper(projectile_t *projectile);
+
 // Enum for our state machine
 enum projectileState_t {INIT, MOVING, DEAD};
 static enum projectileState_t currentState;
 
-// Initialize eggs and projectiles as a dead .  This is useful at the start of the
-// game to ensure that player and plamissile_t of the screen
+// Initializes projectiles as dead
+void projectiles_init_dead(projectile_t *projectile) { 
+  // function takes a pointer to a projectile, no return makes sure it is dead
+  projectile->x_origin = DEAD_COORDINATE_X;
+  projectile->y_origin = DEAD_COORDINATE_Y;
+  projectile->x_current = DEAD_COORDINATE_X;
+  projectile->y_current = DEAD_COORDINATE_Y;
+  init_helper(projectile);
+  projectile->currentState = DEAD;
+  projectile->radius = 15.0;
+}
+
+// Initialize the fortress' gun
 void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_dest){
+  projectile->type = PROJECTILE_TYPE_GUN;
+  projectile->x_origin = 160;
+  projectile->y_origin = 200;
+  projectile->currentState = INIT;
+  projectile->y_dest = y_dest;
+  projectile->x_dest = x_dest;
+  projectile->radius = 15.0;
+  init_helper(projectile);
+
 
 }
 
 // Initialize the projectile as a egg projectile.  This function takes an (x, y)
 // location of the plane which will be used as the origin.  The destination will be the gun
-void projectile_init_egg(projectile_t *projectile, int16_t plane_x, int16_t plane_y){
-
+void projectile_init_egg(projectile_t *projectile, int16_t duck_x, int16_t duck_y){
+  projectile->type = PROJECTILE_TYPE_EGG;
+  projectile->y_dest = 200;
+  projectile->x_dest = 160;
+  projectile->y_origin = duck_y;
+  projectile->x_origin = duck_x;
+  projectile->currentState = INIT;
+  init_helper(projectile);
 }
 
 ////////// State Machine TICK Function //////////
 void projectile_tick(projectile_t *projectile){
+  switch(projectile->currentState){
+    case INIT:
+    projectile->currentState = MOVING;
+    break;
+    case MOVING:
+    if(projectile->length > projectile->total_length){
+      projectile->currentState = DEAD;
+      projectile->die_me = true;
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,
+                       projectile->y_current, DISPLAY_BLACK);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest,
+                       projectile->y_dest, DISPLAY_BLACK);
+    }
+    else if(((projectile->type == PROJECTILE_TYPE_GUN) && (projectile->length >= projectile->total_length)) || (projectile->explode_me == true)){
+      projectile->die_me = true;
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
+      projectile->x_current = projectile->x_dest;
+      projectile->y_current = projectile->y_dest;
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest, projectile->y_dest, DISPLAY_BLACK);
+    }
+    else{
+      projectile->currentState = MOVING;
+    }
+    break;
+    case DEAD:
+    break;
+    default:
+    printf("YOU GOOFED, in the default case for the switch \n");
+    break;
 
+  }
+  switch(projectile->currentState){
+    case INIT:
+    break;
+    case MOVING:
+    // This is the case if the projectile is the player's
+    if (projectile->type == PROJECTILE_TYPE_GUN) {
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_BLACK);
+      percentage = projectile->length / projectile->total_length;
+      projectile->length = (CONFIG_PLAYER_projectile_DISTANCE_PER_TICK * SPEED_MULTIPLIER) + projectile->length;
+      projectile->x_current = projectile->x_origin + percentage * (projectile->x_dest - projectile->x_origin);
+      projectile->y_current = projectile->y_origin + percentage * (projectile->y_dest - projectile->y_origin);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_YELLOW);
+
+    }
+
+    break;
+    case DEAD:
+
+
+    break;
+    default:
+    printf("YOU GOOFED, in the default case for the switch \n");
+    break;
+
+
+  }
 }
 
 // Return whether the given projectile is dead.
