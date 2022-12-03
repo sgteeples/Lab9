@@ -22,13 +22,13 @@ void drawFortress(){
 void drawHealthBar(uint16_t lives){
     display_drawRect(270,20,40,20,DISPLAY_BLACK);
     if(lives >= 3){
-        display_fillRect(275,23,30,14,DISPLAY_GREEN);
+        display_fillRect(270,20,30,14,DISPLAY_GREEN);
     }
     if(lives == 2) {
-        display_fillRect(275,23,20,14,DISPLAY_GREEN);
+        display_fillRect(270,20,20,14,DISPLAY_GREEN);
     }
     if(lives == 1) {
-        display_fillRect(275,23,10,14,DISPLAY_GREEN);
+        display_fillRect(270,20,10,14,DISPLAY_GREEN);
     }
     if(lives == 0){
        display_setCursor(130, 120);
