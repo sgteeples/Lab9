@@ -11,6 +11,11 @@ static enum duck_st_t { MOVING_ST, DEAD_ST } DUMMY;
 
 static duck_t myDuck;
 
+void draw_duck(){
+  
+
+}
+
 //init ducks
 void duck_init(projectile_t *egg){
   // set x and y origins
