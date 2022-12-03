@@ -44,6 +44,9 @@ typedef struct {
   // ground.
   bool egged;
 
+  // used to track radius of the missile
+  double radius;
+
 } projectile_t;
 
 ////////// State Machine INIT Functions //////////

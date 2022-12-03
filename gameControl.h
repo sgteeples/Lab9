@@ -12,4 +12,5 @@ void gameControl_init();
 // This function should tick duckos, projectiles, and more
 void gameControl_tick();
 
+
 #endif /* GAMECONTROL */
