@@ -20,19 +20,20 @@ void drawFortress(){
 }
 
 void drawHealthBar(uint16_t lives){
-    display_drawRect(270,20,40,20,DISPLAY_BLACK);
+    display_drawRect(240,20,62,20,DISPLAY_BLACK);
     if(lives >= 3){
-        display_fillRect(275,23,30,14,DISPLAY_GREEN);
+        display_fillRect(241,21,60,18,DISPLAY_GREEN);
     }
     if(lives == 2) {
-        display_fillRect(275,23,20,14,DISPLAY_GREEN);
+        display_fillRect(241,21,40,18,DISPLAY_GREEN);
     }
     if(lives == 1) {
-        display_fillRect(275,23,10,14,DISPLAY_GREEN);
+        display_fillRect(241,21,20,18,DISPLAY_GREEN);
     }
     if(lives == 0){
-       display_setCursor(130, 120);
+       display_setCursor(65, 110);
        display_setTextColor(DISPLAY_RED);
+       display_setTextSize(3);
        display_print("GAME OVER!!!");
     }
 }
@@ -43,7 +44,7 @@ void gameControl_init(){
 // Draw the fortress that shoots the ducks
     display_fillScreen(DISPLAY_CYAN);
     drawFortress();
-    drawHealthBar(2);
+    drawHealthBar(3);
 
 }
 
@@ -51,5 +52,5 @@ void gameControl_init(){
 //
 // This function should tick duckos, projectiles, and more
 void gameControl_tick(){
-
+    
 }
