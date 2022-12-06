@@ -19,7 +19,7 @@ enum projectileState_t {INIT, MOVING, DEAD};
 static enum projectileState_t currentState;
 
 // Initializes projectiles as dead
-void projectiles_init_dead(projectile_t *projectile) { 
+void projectile_init_dead(projectile_t *projectile) { 
   // function takes a pointer to a projectile, no return makes sure it is dead
   projectile->x_origin = DEAD_COORDINATE_X;
   projectile->y_origin = DEAD_COORDINATE_Y;
@@ -27,7 +27,8 @@ void projectiles_init_dead(projectile_t *projectile) {
   projectile->y_current = DEAD_COORDINATE_Y;
   init_helper(projectile);
   projectile->currentState = DEAD;
-  projectile->radius = 15.0;length
+  projectile->radius = 15.0;
+}
 // Initialize the fortress' gun
 void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_dest){
   projectile->type = PROJECTILE_TYPE_GUN;
@@ -38,10 +39,11 @@ void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_d
   projectile->x_dest = x_dest;
   projectile->radius = 15.0;
   init_helper(projectile);
-
-
-}length
-  projectile->x_dest = 160;
+}
+void projectile_init_egg(projectile_t *projectile, int16_t duck_x, int16_t duck_y){
+  projectile->type = PROJECTILE_TYPE_GUN;
+  projectile->y_dest = 200;
+  projectile->x_dest = DISPLAY_WIDTH / 2;
   projectile->y_origin = duck_y;
   projectile->x_origin = duck_x;
   projectile->currentState = INIT;
@@ -108,8 +110,9 @@ void projectile_tick(projectile_t *projectile){
 
     break;
     default:
-    printf("YOU GOOFED, in the default case for the switch \n");length
-
+    printf("YOU GOOFED, in the default case for the switch \n");
+  }
+}
 // Return whether the given projectile is dead.
 bool projectile_is_dead(projectile_t *projectile){
   // Need to check what state in the state machine we're in
@@ -119,10 +122,10 @@ bool projectile_is_dead(projectile_t *projectile){
   // not true
   else {
     return false;
-  }length
+  }
     return false;
   }   
-}
+
 
 
 // This function takes in a missle and it sets the values that were not set
