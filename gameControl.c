@@ -41,7 +41,7 @@ void drawHealthBar(uint16_t lives){
         display_fillRect(241,21,60,18,DISPLAY_GREEN);
     }
     if(lives == 2) {
-        display_fillRect(241,24,40,18,DISPLAY_GREEN);
+        display_fillRect(241,21,40,18,DISPLAY_GREEN);
     }
     if(lives == 1) {
         display_fillRect(241,21,20,18,DISPLAY_GREEN);
@@ -62,6 +62,7 @@ void gameControl_init(){
     drawFortress();
     drawHealthBar(3);
     initProjectilesAndDuck();
+
 }
 
 // Tick the game control logic
@@ -93,6 +94,4 @@ void gameControl_tick(){
              projectileFired = true;            
         }
     }
-
-
 }

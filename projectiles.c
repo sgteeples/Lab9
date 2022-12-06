@@ -48,6 +48,7 @@ void projectile_init_egg(projectile_t *projectile, int16_t duck_x, int16_t duck_
   projectile->x_origin = duck_x;
   projectile->currentState = INIT;
   init_helper(projectile);
+
 }
 
 ////////// State Machine TICK Function //////////
@@ -130,13 +131,12 @@ bool projectile_is_dead(projectile_t *projectile){
 
 // This function takes in a missle and it sets the values that were not set
 void init_helper(projectile_t *projectile) {
-projectile->x_current = projectile->x_origin;
-projectile->y_current = projectile->y_origin;
-projectile->radius = 15;
-projectile->length = 0.0;
-projectile->die_me = false;
-projectile->egged = false;
-projectile->total_length = sqrt(pow((projectile->y_dest - projectile->y_origin), SQUARED) +
-pow((projectile->x_dest - projectile->x_origin), SQUARED));
-
+    projectile->x_current = projectile->x_origin;
+    projectile->y_current = projectile->y_origin;
+    projectile->radius = 15;
+    projectile->length = 0.0;
+    projectile->die_me = false;
+    projectile->egged = false;
+    projectile->total_length = sqrt(pow((projectile->y_dest - projectile->y_origin), SQUARED) +
+    pow((projectile->x_dest - projectile->x_origin), SQUARED));
 }
