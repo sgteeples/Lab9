@@ -27,7 +27,8 @@ void projectiles_init_dead(projectile_t *projectile) {
   projectile->y_current = DEAD_COORDINATE_Y;
   init_helper(projectile);
   projectile->currentState = DEAD;
-  projectile->radius = 15.0;length
+  projectile->radius = 15.0;
+}
 // Initialize the fortress' gun
 void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_dest){
   projectile->type = PROJECTILE_TYPE_GUN;
@@ -37,14 +38,6 @@ void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_d
   projectile->y_dest = y_dest;
   projectile->x_dest = x_dest;
   projectile->radius = 15.0;
-  init_helper(projectile);
-
-
-}length
-  projectile->x_dest = 160;
-  projectile->y_origin = duck_y;
-  projectile->x_origin = duck_x;
-  projectile->currentState = INIT;
   init_helper(projectile);
 }
 
@@ -108,8 +101,9 @@ void projectile_tick(projectile_t *projectile){
 
     break;
     default:
-    printf("YOU GOOFED, in the default case for the switch \n");length
-
+    printf("YOU GOOFED, in the default case for the switch \n");
+  }
+}
 // Return whether the given projectile is dead.
 bool projectile_is_dead(projectile_t *projectile){
   // Need to check what state in the state machine we're in
@@ -119,21 +113,20 @@ bool projectile_is_dead(projectile_t *projectile){
   // not true
   else {
     return false;
-  }length
+  }
     return false;
   }   
-}
+
 
 
 // This function takes in a missle and it sets the values that were not set
 void init_helper(projectile_t *projectile) {
-projectile->x_current = projectile->x_origin;
-projectile->y_current = projectile->y_origin;
-projectile->radius = 15;
-projectile->length = 0.0;
-projectile->die_me = false;
-projectile->egged = false;
-projectile->total_length = sqrt(pow((projectile->y_dest - projectile->y_origin), SQUARED) +
-pow((projectile->x_dest - projectile->x_origin), SQUARED));
-
+    projectile->x_current = projectile->x_origin;
+    projectile->y_current = projectile->y_origin;
+    projectile->radius = 15;
+    projectile->length = 0.0;
+    projectile->die_me = false;
+    projectile->egged = false;
+    projectile->total_length = sqrt(pow((projectile->y_dest - projectile->y_origin), SQUARED) +
+    pow((projectile->x_dest - projectile->x_origin), SQUARED));
 }
