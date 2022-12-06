@@ -8,15 +8,31 @@
 #include "projectiles.h"
 #include <stdio.h>
 
+// Define
+#define HALF 2
+
 //Declarations
 projectile_t projectiles[SETTING_MAX_TOTAL_PROJECTILES];
 projectile_t *duck_eggs = &(projectiles[0]);
 projectile_t *player_shots = &(projectiles[SETTING_MAX_DUCK_EGGS]);
 
+// Bool variables
+bool firstHalf;
+bool projectileFired;
+
 //Draws fortress
 void drawFortress(){
     display_fillRect(140,220,40,20,DISPLAY_GRAY);
     display_fillRect(150,200,20,20,DISPLAY_GRAY);
+}
+
+void initProjectilesAndDuck(){
+     // for loop to initialize missiles
+  for (uint16_t i = 0; i < SETTING_MAX_TOTAL_PROJECTILES; i++) {
+    projectile_init_dead(&projectiles[i]);
+  } 
+  duck_init(&duck_eggs[0]);
+  firstHalf = true;
 }
 
 void drawHealthBar(uint16_t lives){
@@ -45,6 +61,7 @@ void gameControl_init(){
     display_fillScreen(DISPLAY_CYAN);
     drawFortress();
     drawHealthBar(3);
+    initProjectilesAndDuck();
 
 }
 
@@ -52,5 +69,29 @@ void gameControl_init(){
 //
 // This function should tick duckos, projectiles, and more
 void gameControl_tick(){
-    
+    // Tick duck state machine
+    duck_tick();
+    // Tick first half of missiles for optimization, then second half
+    if(firstHalf){
+        for (uint16_t i = 0; i < SETTING_MAX_TOTAL_PROJECTILES / HALF; i++) {
+            projectile_tick(&projectiles[i]);
+    }
+        firstHalf = false;
+    }
+    else {
+        for (uint16_t i = SETTING_MAX_TOTAL_PROJECTILES / HALF;i < SETTING_MAX_TOTAL_PROJECTILES; i++) {
+            projectile_tick(&projectiles[i]);
+    }
+        firstHalf = true;
+  }
+
+    // We need to get the duck's location in order to specify when it can drop the egg
+    display_point_t duckLocation = duck_getXY();
+    if(projectile_is_dead(&duck_eggs[0])){
+        projectileFired = false;
+        if((duckLocation.x <= DISPLAY_WIDTH / HALF) && !projectileFired){
+             projectile_init_egg(&duck_eggs[0], duckLocation.x, duckLocation.y);
+             projectileFired = true;            
+        }
+    }
 }

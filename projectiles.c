@@ -19,7 +19,7 @@ enum projectileState_t {INIT, MOVING, DEAD};
 static enum projectileState_t currentState;
 
 // Initializes projectiles as dead
-void projectiles_init_dead(projectile_t *projectile) { 
+void projectile_init_dead(projectile_t *projectile) { 
   // function takes a pointer to a projectile, no return makes sure it is dead
   projectile->x_origin = DEAD_COORDINATE_X;
   projectile->y_origin = DEAD_COORDINATE_Y;
@@ -39,6 +39,16 @@ void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_d
   projectile->x_dest = x_dest;
   projectile->radius = 15.0;
   init_helper(projectile);
+}
+void projectile_init_egg(projectile_t *projectile, int16_t duck_x, int16_t duck_y){
+  projectile->type = PROJECTILE_TYPE_GUN;
+  projectile->y_dest = 200;
+  projectile->x_dest = DISPLAY_WIDTH / 2;
+  projectile->y_origin = duck_y;
+  projectile->x_origin = duck_x;
+  projectile->currentState = INIT;
+  init_helper(projectile);
+
 }
 
 ////////// State Machine TICK Function //////////
