@@ -25,6 +25,8 @@ typedef struct {
 
   // duck die
   bool duck_die;
+  uint16_t total_length;
+  double length;
 
   // duck egg
   projectile_t egg;

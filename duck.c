@@ -2,10 +2,13 @@
 #include "duck.h"
 #include "display.h"
 #include "settings.h"
+#include "math.h"
+
 
 #define LEFT 0
 #define TRIANGLE_SIZE 10
 
+double percentage; 
 // State machine enum
 static enum duck_st_t { MOVING_ST, DEAD_ST } DUMMY;
 
@@ -20,14 +23,19 @@ void draw_duck(){
 void duck_init(projectile_t *egg){
   // set x and y origins
   myDuck.x_origin = DISPLAY_WIDTH;
-  myDuck.y_origin = (rand() % 120) + 60;
+  myDuck.y_origin = (rand() % 160) + 45;
   // set x and y currents
   myDuck.x_current = myDuck.x_origin;
   myDuck.y_current = myDuck.y_origin;
   // set x and y dest
   myDuck.x_dest = LEFT;
-  myDuck.y_dest = (rand() % 120)+ 60;
+  myDuck.y_dest = (rand() % 160)+ 45;
   // set missile and state
+
+  myDuck.length = 0;
+  myDuck.duck_die = false;
+  myDuck.total_length = sqrt(pow((myDuck.y_dest - myDuck.y_origin), 2) +
+           pow((myDuck.x_dest - myDuck.x_origin), 2));
 
   myDuck.egg = *egg;
 
@@ -71,7 +79,11 @@ void duck_tick(){
                          myDuck.y_current - TRIANGLE_SIZE, DISPLAY_CYAN);
     // update plane drawing
     if (myDuck.x_current > myDuck.x_dest) {
-      myDuck.x_current -= SETTING_DUCK_DISTANCE_PER_TICK;
+      myDuck.length -= SETTING_DUCK_DISTANCE_PER_TICK*1.5;
+      percentage = myDuck.length/ myDuck.total_length;
+      myDuck.x_current = myDuck.x_origin - (percentage * (myDuck.x_dest - myDuck.x_origin));
+      myDuck.y_current = myDuck.y_origin - (percentage * (myDuck.y_dest - myDuck.y_origin));
+
       // draw the plane again
       display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
                            myDuck.y_current + TRIANGLE_SIZE,
