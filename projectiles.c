@@ -42,7 +42,7 @@ void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_d
 }
 void projectile_init_egg(projectile_t *projectile, int16_t duck_x, int16_t duck_y){
   projectile->type = PROJECTILE_TYPE_GUN;
-  projectile->y_dest = 200;
+  projectile->y_dest = 150;
   projectile->x_dest = DISPLAY_WIDTH / 2;
   projectile->y_origin = duck_y;
   projectile->x_origin = duck_x;
@@ -58,18 +58,19 @@ void projectile_tick(projectile_t *projectile){
     projectile->currentState = MOVING;
     break;
     case MOVING:
-    if(projectile->length > projectile->total_length){
+    if(projectile->length >= projectile->total_length){
       projectile->currentState = DEAD;
       projectile->die_me = true;
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest, projectile->y_dest, DISPLAY_BLACK);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_CYAN);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest, projectile->y_dest, DISPLAY_CYAN);
     }
     else if(((projectile->type == PROJECTILE_TYPE_GUN) && (projectile->length >= projectile->total_length)) || (projectile->die_me == true)){
+      projectile->currentState = DEAD;
       projectile->die_me = true;
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_CYAN);
       projectile->x_current = projectile->x_dest;
       projectile->y_current = projectile->y_dest;
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest, projectile->y_dest, DISPLAY_BLACK);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest, projectile->y_dest, DISPLAY_CYAN);
     }
     else{
       projectile->currentState = MOVING;
@@ -93,16 +94,16 @@ void projectile_tick(projectile_t *projectile){
       projectile->length = (SETTING_PLAYER_SHOT_DISTANCE_PER_TICK * SPEED_MULTIPLIER) + projectile->length;
       projectile->x_current = projectile->x_origin + percentage * (projectile->x_dest - projectile->x_origin);
       projectile->y_current = projectile->y_origin + percentage * (projectile->y_dest - projectile->y_origin);
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_YELLOW);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_BLACK);
 
     }
     else if (projectile->type == PROJECTILE_TYPE_EGG) {
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
       percentage = projectile->length / projectile->total_length;
-      projectile->length = (SETTING_DUCK_EGG_DISTANCE_PER_TICK * SPEED_MULTIPLIER) + projectile->length;
+      projectile->length = (SETTING_DUCK_EGG_DISTANCE_PER_TICK * 2) + projectile->length;
       projectile->x_current = projectile->x_origin + percentage * (projectile->x_dest - projectile->x_origin);
       projectile->y_current = projectile->y_origin + percentage * (projectile->y_dest - projectile->y_origin);
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_DARK_BLUE);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
     }
 
     break;

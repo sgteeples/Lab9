@@ -33,6 +33,7 @@ void initProjectilesAndDuck(){
   } 
   duck_init(&duck_eggs[0]);
   firstHalf = true;
+  projectileFired = false;
 }
 
 void drawHealthBar(uint16_t lives){
@@ -87,11 +88,16 @@ void gameControl_tick(){
 
     // We need to get the duck's location in order to specify when it can drop the egg
     display_point_t duckLocation = duck_getXY();
-    if(projectile_is_dead(&duck_eggs[0])){
+
+    if(projectile_is_dead(&projectiles[0]) && (duckLocation.x <= (DISPLAY_WIDTH / HALF)) && (projectileFired == false)){
+        projectile_init_egg(&(projectiles[0]), duckLocation.x, duckLocation.y);
+        projectileFired = true;
+           
+     }
+     if((duckLocation.x < 300) && (duckLocation.x > 162)){
         projectileFired = false;
-        if((duckLocation.x <= DISPLAY_WIDTH / HALF) && !projectileFired){
-             projectile_init_egg(&duck_eggs[0], duckLocation.x, duckLocation.y);
-             projectileFired = true;            
-        }
-    }
+     }
+
+     
+
 }
