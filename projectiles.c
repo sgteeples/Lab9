@@ -141,7 +141,17 @@ bool projectile_is_dead(projectile_t *projectile){
   }
 }   
 
-
+// Return whether the given projectile is flying.
+bool projectile_is_flying(projectile_t *projectile){
+  // Need to check what state in the state machine we're in
+  if (projectile->currentState == MOVING) {
+    return true;
+  }
+  // not true
+  else {
+    return false;
+  }
+}   
 
 // This function takes in a missle and it sets the values that were not set
 void init_helper(projectile_t *projectile) {
@@ -158,6 +168,5 @@ void init_helper(projectile_t *projectile) {
 void egg_trigger_death(projectile_t *projectile){
   projectile->currentState = DEAD;
   projectile->die_me = true;
-
-  display_fillCircle(projectile->x_current, projectile->y_current, 5, DISPLAY_CYAN);
+  display_fillCircle(projectile->x_current, projectile->y_current, 5, DISPLAY_RED);
 }

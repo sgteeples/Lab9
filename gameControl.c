@@ -98,13 +98,8 @@ void gameControl_tick(){
     // We need to get the duck's location in order to specify when it can drop the egg
     display_point_t duckLocation = duck_getXY();
     //printf("%d\n duckLocation ", duckLocation.x);
-    //projectile_is_dead(&projectiles[0]) &&
-    // if(projectile_is_dead(&projectiles[0]) && (duckLocation.x < 165) && (duckLocation.x > 155) ){
-    //     projectile_init_egg(&projectiles[0], duckLocation.x, duckLocation.y);
-        
-    //  }
     
-    if(projectile_is_dead(&projectiles[0]) && duckLocation.x < 165 && duckLocation.x > 155){
+    if(projectile_is_dead(&projectiles[0]) && (duckLocation.x < 165) && (duckLocation.x > 155)){
         projectile_init_egg(&projectiles[0], duckLocation.x, duckLocation.y);
     }
 
@@ -121,6 +116,9 @@ void gameControl_tick(){
     }
   }
   touchscreen_ack_touch();
+
+
+
     // Have to get the duck location to compare it to the 
     // For loop to see if the gunshot kills the ducks
     for (uint8_t projCounter = 4; projCounter < SETTING_MAX_TOTAL_PROJECTILES; projCounter++) {
@@ -133,26 +131,40 @@ void gameControl_tick(){
       if ((deltaDuckX2 + deltaDuckY2) < RADIUS) {
         duck_die();
       }
-    
   }
+    for(uint8_t eggCounter = 0; eggCounter < SETTING_MAX_DUCK_EGGS; eggCounter++){
+        for(uint8_t projCounter = 4; projCounter < 4 + SETTING_MAX_TOTAL_PROJECTILES;
+         projCounter++){
+            if(projectile_is_flying(&projectiles[eggCounter]) == false){
+                continue;
+            }
+            if(projectile_is_dead(&projectiles[eggCounter])){
+                continue;
+            }
+                double deltaX = projectiles[eggCounter].x_current - projectiles[projCounter].x_current;
+                double deltaY = projectiles[eggCounter].y_current - projectiles[projCounter].y_current;
+                double deltaX2 = deltaX * deltaX;
+                double deltaY2 = deltaY * deltaY;
+                double radius = projectiles[projCounter].radius * projectiles[projCounter].radius;            
+                if ((deltaX2 + deltaY2) < radius) {
+                    egg_trigger_death(&projectiles[eggCounter]);
+      }
+         
+         
+         }
+    }
+  
 
 //     // Double for loops for collisions
-//   for (int16_t i = 0; i < SETTING_TOTAL_DUCKS + SETTING_MAX_DUCK_EGGS; ++i) {
+//   for (int16_t i = 4; i < 4+ SETTING_MAX_DUCK_EGGS; ++i) {
 //     // total missiles
 //     for (int16_t j = 0; j < SETTING_MAX_TOTAL_PROJECTILES; ++j) {
-//       // if missiles not flying and are not exploding continue
-//     //   if (!missile_is_flying(&missiles[i]))
-//     //     continue;
-//     //   if (!missile_is_exploding(&missiles[j]))
-//     //     continue;
-
+//         if (projectile_is_flying(&projectiles[i]) == false){
+//          continue;
+//         }
 //       // calc the distance
-//       double dist = ((projectiles[i].y_current - projectiles[j].y_current) *
-//                          (projectiles[i].y_current - projectiles[j].y_current) +
-//                      (projectiles[i].x_current - projectiles[j].x_current) *
-//                          (projectiles[i].x_current - projectiles[j].x_current));
-//       // calc the radius
-//       //double radius = missiles[j].radius * missiles[j].radius;
+//       double dist = (((projectiles[i].y_current - projectiles[j].y_current) * (projectiles[i].y_current - projectiles[j].y_current)) +
+//                     ((projectiles[i].x_current - projectiles[j].x_current) * (projectiles[i].x_current - projectiles[j].x_current)));
 //       // if dist < radius then trigger explosion
 //       if (dist < RADIUS) {
 //         egg_trigger_death(&projectiles[i]);
@@ -161,14 +173,12 @@ void gameControl_tick(){
 //       // get plane point
 //       display_point_t duckPoint = duck_getXY();
 //       // calc dist
-//       dist = ((duckPoint.y - projectiles[j].y_current) *
-//                   (duckPoint.y - projectiles[j].y_current) +
-//               (duckPoint.x - projectiles[j].x_current) *
-//                   (duckPoint.x - projectiles[j].x_current));
+//       dist = (((duckPoint.y - projectiles[j].y_current) * (duckPoint.y - projectiles[j].y_current)) + 
+//              ((duckPoint.x - projectiles[j].x_current) * (duckPoint.x - projectiles[j].x_current)));
 //       // if smaller than radius then explode
 //       if (dist < RADIUS) {
 //         duck_die();
-//         duck_init(duck_eggs);
+//        // duck_init(duck_eggs);
 //       }
 //     }
 //   }
