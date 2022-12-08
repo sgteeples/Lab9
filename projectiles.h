@@ -51,6 +51,8 @@ typedef struct {
 
 ////////// State Machine INIT Functions //////////
 
+void kill_Projectile(projectile_t *projectile);
+
 // Initialize eggs and projectiles as a dead .  This is useful at the start of the
 // game to ensure that player and plane projectiles aren't moving before they
 // should.
