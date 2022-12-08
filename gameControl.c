@@ -10,6 +10,7 @@
 
 // Define
 #define HALF 2
+
 #define DUCK_X_ADJUSTMENT 30
 #define DUCK_Y_ADJUSTMENT 25
 #define RADIUS 400
