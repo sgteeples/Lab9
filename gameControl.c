@@ -10,8 +10,9 @@
 
 // Define
 #define HALF 2
-#define DUCK_X_ADJUSTMENT 10
-#define DUCK_Y_ADJUSTMENT 5
+
+#define DUCK_X_ADJUSTMENT 30
+#define DUCK_Y_ADJUSTMENT 25
 #define RADIUS 400
 
 //Declarations
@@ -73,8 +74,6 @@ void gameControl_init(){
 
 }
 
-// Tick the game control logic
-//
 // This function should tick duckos, projectiles, and more
 void gameControl_tick(){
 
@@ -119,8 +118,8 @@ void gameControl_tick(){
 
 
 
-    // Have to get the duck location to compare it to the 
-    // For loop to see if the gunshot kills the ducks
+//     // Have to get the duck location to compare it to the 
+//     // For loop to see if the gunshot kills the ducks
     for (uint8_t projCounter = 4; projCounter < SETTING_MAX_TOTAL_PROJECTILES; projCounter++) {
     // if statement that checks if the delta's are inside the radius
       double deltaDuckX = (duckLocation.x + DUCK_X_ADJUSTMENT) - projectiles[projCounter].x_current;
@@ -132,57 +131,15 @@ void gameControl_tick(){
         duck_die();
       }
   }
-    for(uint8_t eggCounter = 0; eggCounter < SETTING_MAX_DUCK_EGGS; eggCounter++){
-        for(uint8_t projCounter = 4; projCounter < 4 + SETTING_MAX_TOTAL_PROJECTILES;
-         projCounter++){
-            if(projectile_is_flying(&projectiles[eggCounter]) == false){
-                continue;
-            }
-            if(projectile_is_dead(&projectiles[eggCounter])){
-                continue;
-            }
-                double deltaX = projectiles[eggCounter].x_current - projectiles[projCounter].x_current;
-                double deltaY = projectiles[eggCounter].y_current - projectiles[projCounter].y_current;
-                double deltaX2 = deltaX * deltaX;
-                double deltaY2 = deltaY * deltaY;
-                double radius = projectiles[projCounter].radius * projectiles[projCounter].radius;            
-                if ((deltaX2 + deltaY2) < radius) {
-                    egg_trigger_death(&projectiles[eggCounter]);
+    for (uint8_t projCounter = 4; projCounter < SETTING_MAX_TOTAL_PROJECTILES; projCounter++) {
+    // if statement that checks if the delta's are inside the radius
+      double deltaDuckX = projectiles[0].x_current  - projectiles[projCounter].x_current;
+      double deltaDuckY = projectiles[0].y_current  - projectiles[projCounter].y_current;
+      double deltaDuckX2 = deltaDuckX * deltaDuckX;
+      double deltaDuckY2 = deltaDuckY * deltaDuckY;
+      // If statement checks if the plance is within blast radius
+      if ((deltaDuckX2 + deltaDuckY2) < RADIUS) {
+            egg_trigger_death(&projectiles[0]);
       }
-         
-         
-         }
-    }
-  
-
-//     // Double for loops for collisions
-//   for (int16_t i = 4; i < 4+ SETTING_MAX_DUCK_EGGS; ++i) {
-//     // total missiles
-//     for (int16_t j = 0; j < SETTING_MAX_TOTAL_PROJECTILES; ++j) {
-//         if (projectile_is_flying(&projectiles[i]) == false){
-//          continue;
-//         }
-//       // calc the distance
-//       double dist = (((projectiles[i].y_current - projectiles[j].y_current) * (projectiles[i].y_current - projectiles[j].y_current)) +
-//                     ((projectiles[i].x_current - projectiles[j].x_current) * (projectiles[i].x_current - projectiles[j].x_current)));
-//       // if dist < radius then trigger explosion
-//       if (dist < RADIUS) {
-//         egg_trigger_death(&projectiles[i]);
-//       }
-
-//       // get plane point
-//       display_point_t duckPoint = duck_getXY();
-//       // calc dist
-//       dist = (((duckPoint.y - projectiles[j].y_current) * (duckPoint.y - projectiles[j].y_current)) + 
-//              ((duckPoint.x - projectiles[j].x_current) * (duckPoint.x - projectiles[j].x_current)));
-//       // if smaller than radius then explode
-//       if (dist < RADIUS) {
-//         duck_die();
-//        // duck_init(duck_eggs);
-//       }
-//     }
-//   }
-
-     
-
+  }
 }
