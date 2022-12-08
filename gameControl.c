@@ -12,7 +12,7 @@
 #define HALF 2
 #define DUCK_X_ADJUSTMENT 10
 #define DUCK_Y_ADJUSTMENT 5
-#define RADIUS 225
+#define RADIUS 400
 
 //Declarations
 projectile_t projectiles[SETTING_MAX_TOTAL_PROJECTILES];

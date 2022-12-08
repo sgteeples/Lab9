@@ -80,13 +80,13 @@ void draw_duck(int16_t myBird[], int16_t x, int16_t y){
 void duck_init(projectile_t *egg){
   // set x and y origins
   myDuck.x_origin = DISPLAY_WIDTH;
-  myDuck.y_origin = (rand() % 160) + 45;
+  myDuck.y_origin = (rand() % 145) + 40;
   // set x and y currents
   myDuck.x_current = myDuck.x_origin;
   myDuck.y_current = myDuck.y_origin;
   // set x and y dest
-  myDuck.x_dest = LEFT;
-  myDuck.y_dest = (rand() % 160)+ 45;
+  myDuck.x_dest = 0;
+  myDuck.y_dest = (rand() % 145)+ 40;
   // set missile and state
 
   myDuck.length = 0;
@@ -106,11 +106,14 @@ void duck_tick(){
   case MOVING_ST:
     // draw duck
     if (myDuck.duck_die || (myDuck.x_current <= myDuck.x_dest)) {
-      display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
-                           myDuck.y_current + TRIANGLE_SIZE,
-                           myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
-                           myDuck.x_current + TRIANGLE_SIZE,
-                           myDuck.y_current - TRIANGLE_SIZE, DISPLAY_CYAN);
+      // display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
+      //                      myDuck.y_current + TRIANGLE_SIZE,
+      //                      myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
+      //                      myDuck.x_current + TRIANGLE_SIZE,
+      //                      myDuck.y_current - TRIANGLE_SIZE, DISPLAY_CYAN);
+
+      display_fillRect(myDuck.x_current, myDuck.y_current, 59,50, DISPLAY_CYAN);
+
       // update state
       myDuck.currentState = DEAD_ST;
     }
@@ -129,11 +132,14 @@ void duck_tick(){
   switch (myDuck.currentState) {
   case MOVING_ST:
     // draw cyan plane
-    display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
-                         myDuck.y_current + TRIANGLE_SIZE,
-                         myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
-                         myDuck.x_current + TRIANGLE_SIZE,
-                         myDuck.y_current - TRIANGLE_SIZE, DISPLAY_CYAN);
+    // display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
+    //                      myDuck.y_current + TRIANGLE_SIZE,
+    //                      myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
+    //                      myDuck.x_current + TRIANGLE_SIZE,
+    //                      myDuck.y_current - TRIANGLE_SIZE, DISPLAY_CYAN);
+
+    //display_fillRect(myDuck.x_current, myDuck.y_current, 59,50, DISPLAY_CYAN);
+
     // update plane drawing
     if (myDuck.x_current > myDuck.x_dest) {
       myDuck.length -= SETTING_DUCK_DISTANCE_PER_TICK*1.5;
@@ -168,11 +174,13 @@ void duck_die(){
   myDuck.currentState = DEAD_ST;
   myDuck.duck_die = true;
   // draw plane in black
-  display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
-                       myDuck.y_current + TRIANGLE_SIZE,
-                       myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
-                       myDuck.x_current + TRIANGLE_SIZE,
-                       myDuck.y_current - TRIANGLE_SIZE, DISPLAY_RED);
+  // display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
+  //                      myDuck.y_current + TRIANGLE_SIZE,
+  //                      myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
+  //                      myDuck.x_current + TRIANGLE_SIZE,
+  //                      myDuck.y_current - TRIANGLE_SIZE, DISPLAY_RED);
+  
+  //display_fillRect(myDuck.x_current, myDuck.y_current, 59,50, DISPLAY_CYAN);
 }
 
 // Get the XY location of the duck
