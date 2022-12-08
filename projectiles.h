@@ -78,4 +78,6 @@ bool projectile_is_flying(projectile_t *projectile);
 
 void egg_trigger_death(projectile_t *projectile);
 
+void stopProjectiles(projectile_t *projectile);
+
 #endif /* PROJECTILES */

@@ -15,7 +15,7 @@ double percentage = 0;
 void init_helper(projectile_t *projectile);
 
 // Enum for our state machine
-enum projectileState_t {INIT, MOVING, DEAD};
+enum projectileState_t {INIT, MOVING, DEAD,ENDGAME};
 static enum projectileState_t currentState;
 
 // Initializes projectiles as dead
@@ -44,7 +44,7 @@ void projectile_init_egg(projectile_t *projectile, int16_t duck_x, int16_t duck_
   projectile->type = PROJECTILE_TYPE_EGG;
   projectile->y_dest = 200;
   projectile->x_dest = DISPLAY_WIDTH / 2;
-  projectile->y_origin = duck_y;
+  projectile->y_origin = duck_y + 50;
   projectile->x_origin = duck_x;
   projectile->currentState = INIT;
   init_helper(projectile);
@@ -74,7 +74,7 @@ void projectile_tick(projectile_t *projectile){
       display_fillCircle(projectile->x_current, projectile->y_current, 5, DISPLAY_CYAN);
       display_fillCircle(projectile->x_dest, projectile->y_dest, 5, DISPLAY_CYAN);
       cleanEgg(projectile->x_origin,projectile->y_origin);
-      //printf("%d\n egg has been cleaned ",projectile->x_current);
+      
     }
     else if(((projectile->type == PROJECTILE_TYPE_GUN) && (projectile->length >= projectile->total_length)) || (projectile->die_me == true)){
       projectile->currentState = DEAD;
@@ -84,12 +84,17 @@ void projectile_tick(projectile_t *projectile){
       projectile->y_current = projectile->y_dest;
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest, projectile->y_dest, DISPLAY_CYAN);
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_CYAN);
+      projectile->x_current = 0;
+      projectile->y_current = 0;
     }
     else{
       projectile->currentState = MOVING;
     }
     break;
     case DEAD:
+    break;
+    case ENDGAME:
+
     break;
     default:
     printf("YOU GOOFED, in the default case for the switch \n");
@@ -121,14 +126,17 @@ void projectile_tick(projectile_t *projectile){
 
     break;
     case DEAD:
-
-
+    break;
+    case ENDGAME:
     break;
     default:
     printf("YOU GOOFED, in the default case for the switch \n");
   }
 }
 
+void stopProjectiles(projectile_t *projectile){
+  projectile->currentState = ENDGAME;
+}
 // Return whether the given projectile is dead.
 bool projectile_is_dead(projectile_t *projectile){
   // Need to check what state in the state machine we're in

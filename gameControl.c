@@ -14,6 +14,7 @@
 #define DUCK_X_ADJUSTMENT 30
 #define DUCK_Y_ADJUSTMENT 25
 #define RADIUS 300
+#define RADIUS_EGG 200
 
 //Declarations
 projectile_t projectiles[SETTING_MAX_TOTAL_PROJECTILES];
@@ -24,15 +25,17 @@ projectile_t *player_shots = &(projectiles[SETTING_MAX_DUCK_EGGS]);
 display_point_t playerTouch;
 
 // Bool variables
+bool egged;
 bool firstHalf;
 bool projectileFired;
-
+uint16_t lives = 3;
 
 //Draws fortress
 void drawFortress(){
     display_fillRect(140,220,40,20,DISPLAY_GRAY);
     display_fillRect(150,200,20,20,DISPLAY_GRAY);
 }
+
 
 void initProjectilesAndDuck(){
      // for loop to initialize missiles
@@ -54,16 +57,24 @@ void drawHealthBar(uint16_t lives){
         display_fillRect(241,21,60,18,DISPLAY_GREEN);
     }
     if(lives == 2) {
+        display_fillRect(241,21,60,18,DISPLAY_CYAN);
         display_fillRect(241,21,40,18,DISPLAY_GREEN);
     }
     if(lives == 1) {
+        display_fillRect(241,21,60,18,DISPLAY_CYAN);
         display_fillRect(241,21,20,18,DISPLAY_GREEN);
     }
     if(lives == 0){
-       display_setCursor(65, 110);
-       display_setTextColor(DISPLAY_RED);
-       display_setTextSize(3);
-       display_print("GAME OVER!!!");
+      for(uint16_t i = 4; i < 8; i++){
+        stopProjectiles(&projectiles[i]);
+        stopBird();
+        }
+            display_fillRect(241,21,60,18,DISPLAY_CYAN);
+            display_fillRect(0,45,320,155,DISPLAY_CYAN);
+            display_setCursor(65, 110);
+            display_setTextColor(DISPLAY_RED);
+            display_setTextSize(3);
+            display_print("GAME OVER!!!");
     }
 }
    
@@ -73,9 +84,9 @@ void gameControl_init(){
 // Draw the fortress that shoots the ducks
     display_fillScreen(DISPLAY_CYAN);
     drawFortress();
-    drawHealthBar(3);
+    drawHealthBar(lives);
     initProjectilesAndDuck();
-
+    egged = false;
 }
 
 // This function should tick duckos, projectiles, and more
@@ -142,8 +153,17 @@ void gameControl_tick(){
       double deltaDuckX2 = deltaDuckX * deltaDuckX;
       double deltaDuckY2 = deltaDuckY * deltaDuckY;
       // If statement checks if the plance is within blast radius
-      if ((deltaDuckX2 + deltaDuckY2) < RADIUS) {
+      if ((deltaDuckX2 + deltaDuckY2) < RADIUS_EGG) {
             egg_trigger_death(&projectiles[0]);
       }
+  }
+
+    printf("%d\n projectile y ", projectiles[0].y_current);
+  if(projectiles[0].y_current > 195){
+    if(!projectile_is_dead(&projectiles[0])){
+        egg_trigger_death(&projectiles[0]);
+        lives--;
+        drawHealthBar(lives);
+    }
   }
 }
