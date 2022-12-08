@@ -10,7 +10,7 @@
 
 double percentage; 
 // State machine enum
-static enum duck_st_t { MOVING_ST, DEAD_ST } DUMMY;
+static enum duck_st_t { MOVING_ST, DEAD_ST, END_GAME_ST } DUMMY;
 
 static duck_t myDuck;
 
@@ -106,14 +106,7 @@ void duck_tick(){
   case MOVING_ST:
     // draw duck
     if (myDuck.duck_die || (myDuck.x_current <= myDuck.x_dest)) {
-      // display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
-      //                      myDuck.y_current + TRIANGLE_SIZE,
-      //                      myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
-      //                      myDuck.x_current + TRIANGLE_SIZE,
-      //                      myDuck.y_current - TRIANGLE_SIZE, DISPLAY_CYAN);
-
       display_fillRect(myDuck.x_current, myDuck.y_current, 59,50, DISPLAY_CYAN);
-
       // update state
       myDuck.currentState = DEAD_ST;
     }
@@ -121,6 +114,8 @@ void duck_tick(){
   case DEAD_ST:
     // update state
     myDuck.currentState = MOVING_ST;
+    break;
+  case END_GAME_ST:
     break;
   default:
     // Error Message
@@ -131,15 +126,6 @@ void duck_tick(){
   // State action
   switch (myDuck.currentState) {
   case MOVING_ST:
-    // draw cyan plane
-    // display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
-    //                      myDuck.y_current + TRIANGLE_SIZE,
-    //                      myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
-    //                      myDuck.x_current + TRIANGLE_SIZE,
-    //                      myDuck.y_current - TRIANGLE_SIZE, DISPLAY_CYAN);
-
-    //display_fillRect(myDuck.x_current, myDuck.y_current, 59,50, DISPLAY_CYAN);
-
     // update plane drawing
     if (myDuck.x_current > myDuck.x_dest) {
       myDuck.length -= SETTING_DUCK_DISTANCE_PER_TICK*1.5;
@@ -147,19 +133,14 @@ void duck_tick(){
       myDuck.x_current = myDuck.x_origin - (percentage * (myDuck.x_dest - myDuck.x_origin));
       myDuck.y_current = myDuck.y_origin - (percentage * (myDuck.y_dest - myDuck.y_origin));
 
-      // draw the plane again
-      // display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
-      //                      myDuck.y_current + TRIANGLE_SIZE,
-      //                      myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
-      //                      myDuck.x_current + TRIANGLE_SIZE,
-      //                      myDuck.y_current - TRIANGLE_SIZE, DISPLAY_YELLOW);
-
       draw_duck(myBird, myDuck.x_current, myDuck.y_current);
     }
     break;
   // Dead state
   case DEAD_ST:
     duck_init(&myDuck.egg);
+    break;
+  case END_GAME_ST:
     break;
   default:
     // Error Message
@@ -173,14 +154,6 @@ void duck_die(){
     // update state
   myDuck.currentState = DEAD_ST;
   myDuck.duck_die = true;
-  // draw plane in black
-  // display_fillTriangle(myDuck.x_current + TRIANGLE_SIZE,
-  //                      myDuck.y_current + TRIANGLE_SIZE,
-  //                      myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
-  //                      myDuck.x_current + TRIANGLE_SIZE,
-  //                      myDuck.y_current - TRIANGLE_SIZE, DISPLAY_RED);
-  
-  //display_fillRect(myDuck.x_current, myDuck.y_current, 59,50, DISPLAY_CYAN);
 }
 
 // Get the XY location of the duck
@@ -192,4 +165,8 @@ display_point_t duck_getXY(){
   duckPoint.y = myDuck.y_current;
   return duckPoint;
 
+}
+
+void stopBird() {
+  myDuck.currentState = END_GAME_ST;
 }

@@ -13,7 +13,7 @@
 
 #define DUCK_X_ADJUSTMENT 30
 #define DUCK_Y_ADJUSTMENT 25
-#define RADIUS 400
+#define RADIUS 300
 
 //Declarations
 projectile_t projectiles[SETTING_MAX_TOTAL_PROJECTILES];
@@ -45,6 +45,10 @@ void initProjectilesAndDuck(){
 }
 
 void drawHealthBar(uint16_t lives){
+    display_setCursor(240, 7);
+    display_setTextColor(DISPLAY_BLACK);
+    display_setTextSize(1);
+    display_print("Health Bar");
     display_drawRect(240,20,62,20,DISPLAY_BLACK);
     if(lives >= 3){
         display_fillRect(241,21,60,18,DISPLAY_GREEN);
