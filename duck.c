@@ -112,7 +112,7 @@ void duck_die(){
                        myDuck.y_current + TRIANGLE_SIZE,
                        myDuck.x_current - TRIANGLE_SIZE, myDuck.y_current,
                        myDuck.x_current + TRIANGLE_SIZE,
-                       myDuck.y_current - TRIANGLE_SIZE, DISPLAY_CYAN);
+                       myDuck.y_current - TRIANGLE_SIZE, DISPLAY_RED);
 }
 
 // Get the XY location of the duck

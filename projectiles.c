@@ -41,14 +41,24 @@ void projectile_init_gun(projectile_t *projectile, uint16_t x_dest, uint16_t y_d
   init_helper(projectile);
 }
 void projectile_init_egg(projectile_t *projectile, int16_t duck_x, int16_t duck_y){
-  projectile->type = PROJECTILE_TYPE_GUN;
-  projectile->y_dest = 150;
+  projectile->type = PROJECTILE_TYPE_EGG;
+  projectile->y_dest = 200;
   projectile->x_dest = DISPLAY_WIDTH / 2;
   projectile->y_origin = duck_y;
   projectile->x_origin = duck_x;
   projectile->currentState = INIT;
   init_helper(projectile);
 
+}
+
+// Clean Egg 
+void cleanEgg(int16_t duck_x, int16_t duck_y){
+    display_fillRect(150,40,20,200, DISPLAY_CYAN);
+    display_fillRect(140,220,40,20,DISPLAY_GRAY);
+    display_fillRect(150,200,20,20,DISPLAY_GRAY);
+}
+void kill_Projectile(projectile_t *projectile){
+  projectile->currentState = DEAD;
 }
 
 ////////// State Machine TICK Function //////////
@@ -58,11 +68,13 @@ void projectile_tick(projectile_t *projectile){
     projectile->currentState = MOVING;
     break;
     case MOVING:
-    if(projectile->length >= projectile->total_length){
+    if((projectile->length >= projectile->total_length) && (PROJECTILE_TYPE_EGG == projectile->type)){
       projectile->currentState = DEAD;
       projectile->die_me = true;
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_CYAN);
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest, projectile->y_dest, DISPLAY_CYAN);
+      cleanEgg(projectile->x_origin,projectile->y_origin);
+      printf("%d\n egg has been cleaned ",projectile->x_current);
     }
     else if(((projectile->type == PROJECTILE_TYPE_GUN) && (projectile->length >= projectile->total_length)) || (projectile->die_me == true)){
       projectile->currentState = DEAD;
@@ -71,6 +83,7 @@ void projectile_tick(projectile_t *projectile){
       projectile->x_current = projectile->x_dest;
       projectile->y_current = projectile->y_dest;
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest, projectile->y_dest, DISPLAY_CYAN);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_CYAN);
     }
     else{
       projectile->currentState = MOVING;
@@ -95,8 +108,10 @@ void projectile_tick(projectile_t *projectile){
       projectile->x_current = projectile->x_origin + percentage * (projectile->x_dest - projectile->x_origin);
       projectile->y_current = projectile->y_origin + percentage * (projectile->y_dest - projectile->y_origin);
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_BLACK);
-
-    }
+      
+    
+}
+    
     else if (projectile->type == PROJECTILE_TYPE_EGG) {
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
       percentage = projectile->length / projectile->total_length;
@@ -115,6 +130,7 @@ void projectile_tick(projectile_t *projectile){
     printf("YOU GOOFED, in the default case for the switch \n");
   }
 }
+
 // Return whether the given projectile is dead.
 bool projectile_is_dead(projectile_t *projectile){
   // Need to check what state in the state machine we're in

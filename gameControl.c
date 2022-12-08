@@ -10,15 +10,22 @@
 
 // Define
 #define HALF 2
+#define DUCK_X_ADJUSTMENT 10
+#define DUCK_Y_ADJUSTMENT 5
+#define RADIUS 25
 
 //Declarations
 projectile_t projectiles[SETTING_MAX_TOTAL_PROJECTILES];
 projectile_t *duck_eggs = &(projectiles[0]);
 projectile_t *player_shots = &(projectiles[SETTING_MAX_DUCK_EGGS]);
 
+// Display point for player
+display_point_t playerTouch;
+
 // Bool variables
 bool firstHalf;
 bool projectileFired;
+
 
 //Draws fortress
 void drawFortress(){
@@ -31,7 +38,7 @@ void initProjectilesAndDuck(){
   for (uint16_t i = 0; i < SETTING_MAX_TOTAL_PROJECTILES; i++) {
     projectile_init_dead(&projectiles[i]);
   } 
-  duck_init(&duck_eggs[0]);
+  duck_init(&projectiles[0]);
   firstHalf = true;
   projectileFired = false;
 }
@@ -88,15 +95,39 @@ void gameControl_tick(){
 
     // We need to get the duck's location in order to specify when it can drop the egg
     display_point_t duckLocation = duck_getXY();
+    printf("%d\n duckLocation ", duckLocation.x);
+    if(projectile_is_dead(&projectiles[0]) && (duckLocation.x < 165) && (duckLocation.x > 155) ){
+        projectile_init_egg(&projectiles[0], duckLocation.x, duckLocation.y);
+        
+     }
 
-    if(projectile_is_dead(&projectiles[0]) && (duckLocation.x <= (DISPLAY_WIDTH / HALF)) && (projectileFired == false)){
-        projectile_init_egg(&(projectiles[0]), duckLocation.x, duckLocation.y);
-        projectileFired = true;
-           
-     }
-     if((duckLocation.x < 300) && (duckLocation.x > 162)){
-        projectileFired = false;
-     }
+
+       // for loop that gets player location and fires
+    for (uint16_t i = 4; i < 4 + SETTING_MAX_PLAYER_SHOTS; i++) {
+    // checks if screen is touched
+        if ((touchscreen_get_status() == TOUCHSCREEN_RELEASED) &&
+        (projectile_is_dead(&projectiles[i]))) {
+            playerTouch = touchscreen_get_location();
+            projectile_init_gun(&projectiles[i], playerTouch.x, playerTouch.y);
+            touchscreen_ack_touch();
+            
+    }
+  }
+  touchscreen_ack_touch();
+    // Have to get the duck location to compare it to the 
+    // For loop to see if the gunshot kills the ducks
+    for (uint8_t projCounter = 0; projCounter < SETTING_MAX_TOTAL_PROJECTILES; projCounter++) {
+    // if statement that checks if the delta's are inside the radius
+      double deltaDuckX = (duckLocation.x + DUCK_X_ADJUSTMENT) - projectiles[projCounter].x_current;
+      double deltaDuckY = (duckLocation.y + DUCK_Y_ADJUSTMENT) - projectiles[projCounter].y_current;
+      double deltaDuckX2 = deltaDuckX * deltaDuckX;
+      double deltaDuckY2 = deltaDuckY * deltaDuckY;
+      // If statement checks if the plance is within blast radius
+      if ((deltaDuckX2 + deltaDuckY2) < RADIUS) {
+        duck_die();
+      }
+    
+  }
 
      
 
