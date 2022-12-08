@@ -76,4 +76,6 @@ bool projectile_is_dead(projectile_t *projectile);
 // Return whether the given projectile is flying.
 bool projectile_is_flying(projectile_t *projectile);
 
+void egg_trigger_death(projectile_t *projectile);
+
 #endif /* PROJECTILES */

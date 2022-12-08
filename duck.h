@@ -35,6 +35,8 @@ typedef struct {
 
 void duck_init(projectile_t *egg);
 
+void draw_duck();
+
 // State machine tick function
 void duck_tick();
 

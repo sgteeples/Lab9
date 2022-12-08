@@ -71,10 +71,10 @@ void projectile_tick(projectile_t *projectile){
     if((projectile->length >= projectile->total_length) && (PROJECTILE_TYPE_EGG == projectile->type)){
       projectile->currentState = DEAD;
       projectile->die_me = true;
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_CYAN);
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_dest, projectile->y_dest, DISPLAY_CYAN);
+      display_fillCircle(projectile->x_current, projectile->y_current, 5, DISPLAY_CYAN);
+      display_fillCircle(projectile->x_dest, projectile->y_dest, 5, DISPLAY_CYAN);
       cleanEgg(projectile->x_origin,projectile->y_origin);
-      printf("%d\n egg has been cleaned ",projectile->x_current);
+      //printf("%d\n egg has been cleaned ",projectile->x_current);
     }
     else if(((projectile->type == PROJECTILE_TYPE_GUN) && (projectile->length >= projectile->total_length)) || (projectile->die_me == true)){
       projectile->currentState = DEAD;
@@ -102,23 +102,21 @@ void projectile_tick(projectile_t *projectile){
     case MOVING:
     // This is the case if the projectile is the player's
     if (projectile->type == PROJECTILE_TYPE_GUN) {
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_BLACK);
+      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_CYAN);
       percentage = projectile->length / projectile->total_length;
       projectile->length = (SETTING_PLAYER_SHOT_DISTANCE_PER_TICK * SPEED_MULTIPLIER) + projectile->length;
       projectile->x_current = projectile->x_origin + percentage * (projectile->x_dest - projectile->x_origin);
       projectile->y_current = projectile->y_origin + percentage * (projectile->y_dest - projectile->y_origin);
       display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current,projectile->y_current, DISPLAY_BLACK);
-      
-    
-}
+    }
     
     else if (projectile->type == PROJECTILE_TYPE_EGG) {
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
+      display_fillCircle(projectile->x_current, projectile->y_current, 5, DISPLAY_CYAN);
       percentage = projectile->length / projectile->total_length;
       projectile->length = (SETTING_DUCK_EGG_DISTANCE_PER_TICK * 2) + projectile->length;
       projectile->x_current = projectile->x_origin + percentage * (projectile->x_dest - projectile->x_origin);
       projectile->y_current = projectile->y_origin + percentage * (projectile->y_dest - projectile->y_origin);
-      display_drawLine(projectile->x_origin, projectile->y_origin, projectile->x_current, projectile->y_current, DISPLAY_BLACK);
+      display_fillCircle(projectile->x_current, projectile->y_current, 5, DISPLAY_WHITE);
     }
 
     break;
@@ -141,8 +139,7 @@ bool projectile_is_dead(projectile_t *projectile){
   else {
     return false;
   }
-    return false;
-  }   
+}   
 
 
 
@@ -156,4 +153,11 @@ void init_helper(projectile_t *projectile) {
     projectile->egged = false;
     projectile->total_length = sqrt(pow((projectile->y_dest - projectile->y_origin), SQUARED) +
     pow((projectile->x_dest - projectile->x_origin), SQUARED));
+}
+
+void egg_trigger_death(projectile_t *projectile){
+  projectile->currentState = DEAD;
+  projectile->die_me = true;
+
+  display_fillCircle(projectile->x_current, projectile->y_current, 5, DISPLAY_CYAN);
 }
