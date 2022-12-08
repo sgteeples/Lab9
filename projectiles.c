@@ -168,5 +168,5 @@ void init_helper(projectile_t *projectile) {
 void egg_trigger_death(projectile_t *projectile){
   projectile->currentState = DEAD;
   projectile->die_me = true;
-  display_fillCircle(projectile->x_current, projectile->y_current, 5, DISPLAY_RED);
+  display_fillCircle(projectile->x_current, projectile->y_current, 5, DISPLAY_CYAN);
 }
