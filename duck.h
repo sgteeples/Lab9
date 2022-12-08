@@ -49,4 +49,6 @@ void draw_duck(int16_t myBird[], int16_t x, int16_t y);
 
 void draw_simple_duck();
 
+void stopBird();
+
 #endif /* DUCK */
